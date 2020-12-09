@@ -1,0 +1,18 @@
+{
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+				"targets": "last 2 versions, not dead, not ie 6-11",
+                "useBuiltIns": false,
+				"modules": false,
+				"corejs": null
+            }
+        ],
+		"@babel/preset-typescript"
+    ],
+    "plugins": [
+		["@babel/plugin-syntax-dynamic-import"],
+		["@babel/plugin-proposal-class-properties"]
+    ]
+}

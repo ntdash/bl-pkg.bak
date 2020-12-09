@@ -1,0 +1,21 @@
+[
+	{
+		"name": "Folder Shortage Name",
+
+		"content" : {
+			// [shortname]: fullname
+
+			"cp": "components",
+			"hs": "hosts",
+			"ps": "presets",
+			"pg": "pages",
+			"md": "modules",
+			"sb": "sub",
+			"fn": "functions",
+			"vr": "variables",
+			"ut": "utils",
+			"uts": "utilities",
+			"env": "environements"
+		}
+	}
+]
