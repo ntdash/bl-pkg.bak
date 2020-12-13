@@ -17,5 +17,13 @@
 			"uts": "utilities",
 			"env": "environements"
 		}
+	},
+	{
+		"name": "attribut fortage name",
+		"content": {
+			// "js:ac": "js-ac"
+
+			"pmd": "Page Modules"
+		}
 	}
 ]

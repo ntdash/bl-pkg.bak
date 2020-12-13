@@ -13,8 +13,8 @@
 		"paths": {
 
 			"hs/*": [ "ts/hs/*", "sass/hs/*" ],
-			"style/*": [ "sass/*" ],
-			"script/*": [ "ts/*" ],
+			"styles/*": [ "sass/*" ],
+			"scripts/*": [ "ts/*" ],
 
 			"images/*": [ "images/*" ]
 		},

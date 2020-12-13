@@ -1,4 +1,4 @@
-import Starter from "script/ps/app"
+import Starter from "scripts/ps/app"
 import HsConfig from "./config"
 
 

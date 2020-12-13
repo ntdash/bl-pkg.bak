@@ -75,11 +75,13 @@ const config:webpack.Configuration =
 		extensions: ['.ts', '.js', '.txt', ".jsx"],
 
 		alias: {
-			iamges: assetPath('images')
+			// images: assetPath('images'),
+			scripts: assetPath('ts'),
+			// styles: assetPath('sass')
+			hs: [assetPath('sass/hs'), assetPath('ts/hs')]
 		},
-
 		plugins: [
-			new tsconfig()
+			new tsconfig
 		]
 	},
 

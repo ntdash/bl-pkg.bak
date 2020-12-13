@@ -1,20 +1,61 @@
 interface Starter {
+
 	start: () => void
 }
 
 
-interface HsConfigSectionOptionItem
+interface StaterLoadPartOptions
 {
-	name: string,
-	pathname?: string
+	done ?: VoidFunction
+	fail ?: VoidFunction
+	complete ?: VoidFunction
 }
 
-interface HsConfigSection
-{
-	type: 'detach' | '*' | 'composed',
-	options: Array<HsConfigSectionOptionItem>
+
+// ------------------------------------------------------------
+
+
+interface HsConfigSectionOptionItem {
+
+	name: string,
+	pathname ?: string
+}
+
+interface HsConfigSection {
+
+	composed: boolean
+	options ?: Array<  HsConfigSectionOptionItem >
 }
 
 interface HsConfig {
-	sections: Ob<HsConfigSection>
+
+	sections ?: HsConfigSection
+}
+
+// ------------------------------------------------------------
+
+
+interface SinglePmd {
+
+	listeners ?: ListenerRepository
+	tms ?: Tms[]
+}
+
+interface MultiPmd {
+
+	preset ?: SinglePmd
+	pages: Ob<SinglePmd>
+}
+
+interface PmdRepositoryItem <T> {
+
+	preset ?: T
+	current ?: T
+	pages ?: Ob<T>
+}
+
+interface Pmd {
+
+	listeners: PmdRepositoryItem<ListenerRepository>
+	tms: PmdRepositoryItem<Tms[]>
 }

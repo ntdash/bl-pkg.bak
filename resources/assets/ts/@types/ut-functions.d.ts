@@ -26,4 +26,13 @@ interface UtilsFunctions {
 		//  */
 		// extractClasses: ($classes ?: string[]) => string
 	}
+
+	data: {
+
+		// find first data in DataCollection <ArrayLike>
+		findFirst: <T extends Ob<any>>(collection: Array<T>, predicate: Ob<any>) => false | T
+
+		// find all datas in DataCollection <ArrayLike>
+		findAll: <T extends Ob<any>>(collection: Array<T>, predicate: Ob<any>) => false | T[]
+	}
 }
