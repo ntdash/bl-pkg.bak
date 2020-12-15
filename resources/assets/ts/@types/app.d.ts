@@ -29,7 +29,7 @@ interface HsConfigSection {
 
 interface HsConfig {
 
-	sections ?: HsConfigSection
+	sections: Ob<HsConfigSection>
 }
 
 // ------------------------------------------------------------

@@ -4,6 +4,9 @@ declare const nt: GlobalStore;
 
 declare const env: WkpsaceEnvPreset;
 
+
+declare const logs: TmsLogRepository;
+
 /**
  *
  * Global variable
@@ -38,6 +41,12 @@ interface GlobalStore {
 			pagename: string
 		}
 	}
+
+
+	/** [Mutation Observers Cond] bind to the property, [observe], of each Tms requesting the monitoring of some HTMLElements */
+	observers: TmsMutationOptions[]
+
+	map ?: string
 }
 
 

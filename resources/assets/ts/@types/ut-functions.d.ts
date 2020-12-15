@@ -1,5 +1,27 @@
+interface DataFindOptions {
+	first ?: boolean,
+	index ?: boolean
+}
+
+
 interface UtilsFunctions {
 
+	data: {
+
+		// find first data in DataCollection <ArrayLike>
+		find: <T extends Ob<any>>(collection: Array<T>, predicate: Ob<any>) => false | T
+
+		// find all datas in DataCollection <ArrayLike>
+		findAll: <T extends Ob<any>>(collection: Array<T>, predicate: Ob<any>) => false | T[]
+
+
+
+		findIndex: <T extends Ob<any>>(collection: Array<T>, predicate: Ob<any>) => false | number
+
+		findAllIndex: <T extends Ob<any>>(collection: Array<T>, predicate: Ob<any>) => false | number[]
+
+
+	}
 
 	dom: {
 
@@ -27,12 +49,20 @@ interface UtilsFunctions {
 		// extractClasses: ($classes ?: string[]) => string
 	}
 
-	data: {
+	json: {
+		/**
+		 * Encode JSON
+		 * @param ob: Ob<any>
+		 * @return string
+		 */
+		encode: (ob: Ob<any>) => string | false
 
-		// find first data in DataCollection <ArrayLike>
-		findFirst: <T extends Ob<any>>(collection: Array<T>, predicate: Ob<any>) => false | T
-
-		// find all datas in DataCollection <ArrayLike>
-		findAll: <T extends Ob<any>>(collection: Array<T>, predicate: Ob<any>) => false | T[]
+		/**
+		 * Decode JSON
+		 * @param str: string
+		 * @param r: boolean
+		 * @return Ob<any>
+		 */
+		decode: (str: string, r?: boolean) => false | Ob<any>
 	}
 }

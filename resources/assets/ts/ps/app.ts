@@ -37,8 +37,12 @@ class Application implements Starter {
 	/**
 	 * Load Current Application's Pages Script
 	 */
-	private loadCurrent() {
+	private async loadCurrent() {
 
+		// wait for the default Tms[]
+		await this.#tms.postDefault();
+
+		// load Current Tms[]
 		import(`hs/${this.resolveSection(this.#config.sections)}/app.ts`)
 		.then(({default: pmd}) => {
 
@@ -103,18 +107,16 @@ class Application implements Starter {
 	 * resolve requested script section [ pageName | sectionName ]
 	 * @param sp SectionParams
 	 */
-	private resolveSection(repo: HsConfig['sections']) {
+	private resolveSection(repository: HsConfig['sections']) {
 
-		/**
-		 * proccess with en e.g
-		 * params = {container: admin, name: update}
-		 * repo -> [admin] = {type: "composed"}
-		 */
 
 		// get pages informations
 		const params = nt.data.params;
 
-		// resolve = "admin"
+		// resolve container scopes ...
+		const repo = repository[params.container];
+
+
 		let resolve = params.container;
 
 
@@ -122,16 +124,18 @@ class Application implements Starter {
 		{
 			if(repo.options)
 			{
+
 				// search requested page-filename in repo
-				let file =  fn.data.findFirst(repo.options, {name: params.pagename})
+				let file =  fn.data.find(repo.options, {name: params.pagename});
+
 
 				if(file)
 				resolve += `/pg/${ file.pathname || file.name }`;
 			}
 		}
 
-		return resolve;
 
+		return resolve;
 	}
 
 	/**

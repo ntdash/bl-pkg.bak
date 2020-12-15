@@ -1,39 +1,50 @@
 const utils = {
 
-	find:  <T extends Ob<any>> (collection: Array<T>,  predicate: Ob<any>, first: boolean = false ) =>
+	find:  <T extends Ob<any>> (arr: Array<T>,  predicate: Ob<any>, options: DataFindOptions ) =>
 	{
-		let res: Array<T> = [];
+		const matches: T[] =  [];
+		const matchesID: number[] = [];
 
-		// Iteration
 
-		for(let item of collection)
-		{
-			const keys = Object.keys(predicate).reverse();
-			let i = keys.length;
+		if(! (arr instanceof Array)) return false;
 
-			for(; i > 0; i--)
-			{
-				if(item[keys[i-1]] !== predicate[keys[i-1]])
-				break;
+		const repo = [...arr];
 
-				if(i === 0)
-					if(!first)
-						res.push(item);
-					else
-						return item;
+		for( let item, i = 0; item = repo.shift(); i++) {
+
+			let state = true;
+
+			for(let k in predicate) {
+
+				if(predicate[k] !== item[k]) {
+					state = false;
+					break;
+				}
+			}
+
+			if(state) {
+
+				if(options.first)
+					return options.index ? i : item;
+
+				matchesID.push(i);
+				matches.push(item);
 			}
 		}
 
-		return res.length > 0 ? res : false;
+		return matches.length > 0 ? (options.index ? matchesID : matches) : false;
 	}
 }
 
-
 const ob: UtilsFunctions['data'] = {
 
-	findFirst: <T extends Ob<any>> (collection: Array<T>,  predicate: Ob<any>) => utils.find.call(null, collection, predicate, true) as false | T,
+	find: <T extends Ob<any>> (arr: Array<T>,  predicate: Ob<any>) => utils.find.call(null, arr, predicate,  {first: true}) as false | T,
 
-	findAll: <T extends Ob<any>> (collection: Array<T>,  predicate: Ob<any>) => utils.find.call(null, collection, predicate, false) as false | T[]
+	findAll: <T extends Ob<any>> (arr: Array<T>,  predicate: Ob<any>) => utils.find.call(null, arr, predicate, {}) as false | T[],
+
+	findIndex: <T extends Ob<any>> (arr: Array<T>,  predicate: Ob<any>) => utils.find.call(null, arr, predicate,  {first: true, index: true}) as false | number,
+
+	findAllIndex: <T extends Ob<any>> (arr: Array<T>,  predicate: Ob<any>) => utils.find.call(null, arr, predicate,  {index: true}) as false | number[],
 
 }
 

@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Js - Loader</title>
-	<script type="application/json"><?= json_encode(["params" => ["container" => "main","name" => "home"]]) ?></script>
+	<script id="p-data" type="application/json"><?= json_encode(["params" => ["container" => "main","pagename" => "home"]]) ?></script>
 	<script defer src="//w-server.tb:8081/static/js/main.js"></script>
 
 </head>
