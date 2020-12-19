@@ -1,4 +1,4 @@
-
+import { statSync } from "fs";
 
 class PmdUtils {
 
@@ -20,13 +20,20 @@ class PmdUtils {
 			 * SinglePmd - Part
 			 * process if pmd got [tms | listeners] as key(s)
 			 */
-			if('tms' in pmd || 'listeners' in pmd)
+			if(pmd.tms)
+			Object.assign(refactored.tms, {current: this.resolveTmsInput(pmd.tms)});
 
-			Object.assign(refactored, {
-				tms: {current: this.resolveTmsInput(pmd.tms)},
-				listeners: {current: pmd.listeners || {}}
-			});
 
+			if(pmd.listeners) {
+
+				const stack = pmd.listeners;
+
+				if(stack.preset)
+				Object.assign(refactored.listeners, {preset: stack.preset});
+
+				if(stack.current)
+				Object.assign(refactored.listeners, {current: stack.current || {}});
+			}
 		}
 		else {
 
@@ -40,7 +47,7 @@ class PmdUtils {
 				});
 			}
 
-			// add 'pages' property to [pmd.tms && pmd.listeners]
+			// Init 'pages' property to [pmd.tms && pmd.listeners]
 
 			Object.assign(refactored.listeners, {pages: {}})
 			Object.assign(refactored.tms, {pages: {}})

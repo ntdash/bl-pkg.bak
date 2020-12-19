@@ -1,5 +1,6 @@
 interface Starter {
 
+	mount: (elt: HTMLElement) => void
 	start: () => void
 }
 
@@ -37,7 +38,11 @@ interface HsConfig {
 
 interface SinglePmd {
 
-	listeners ?: ListenerRepository
+	listeners ?: {
+		current ?: ListenerRepository,
+		preset: ListenerRepository
+	} | ListenerRepository
+
 	tms ?: Tms[]
 }
 

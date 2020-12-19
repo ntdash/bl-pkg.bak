@@ -1,6 +1,5 @@
 import DefaultRepository from "./default"
 import CriticalError from "../../error/critical"
-import repository from "./default";
 
 
 class Loader implements TmsLoader {
@@ -13,6 +12,9 @@ class Loader implements TmsLoader {
 
 		this.#queue = DefaultRepository;
 		this.#logs = [];
+
+		// init GlobalStore.obeservers for DOM-Mutation-Observers
+		Object.assign(nt, {observers: []});
 
 		// save logs globaly
 		(window as any)['logs'] = Object.assign(this.#logs, {
@@ -169,6 +171,9 @@ class Loader implements TmsLoader {
 		if(! (dependencies instanceof Array) ||  dependencies.length <= 0)
 		return;
 
+		if(tms.observe)
+		dependencies.unshift('dom_mutation_observer');
+
 
 		const search = [tms];
 
@@ -240,12 +245,29 @@ class Loader implements TmsLoader {
 
 			if(! (fall instanceof Function)) {
 
-				if(typeof fall.options === "boolean" && fall.options === true)
-				this.#queue.push( Object.assign(tms, {fallback: fall.callback}));
+
+				if(( typeof fall === 'boolean' && fall === true) || ('options' in fall && fall.options === true ))
+				this.#queue.push( Object.assign(tms, { fallback: (fall as TmsFallback).callback }));
 
 
-				else if(typeof fall.options === "object" && "delay" in fall.options)
-				this.RetryTms( Object.assign(tms, {fallback: undefined}), fall);
+				else if( typeof fall === "object" ) {
+
+					let state = [
+						'delay' in fall,
+
+						'options' in fall && (
+
+							typeof fall.options === "object"
+							&&
+							typeof fall.options.delay === "number"
+
+						)
+					];
+
+					if(state[0] || state[1])
+					this.RetryTms(Object.assign(tms, {fallback: undefined}), {...(state[1] ? fall : {options: fall}) as TmsFallback });
+
+				}
 
 				return -1;
 			}

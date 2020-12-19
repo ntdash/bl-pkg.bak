@@ -138,16 +138,23 @@ class Application implements Starter {
 		return resolve;
 	}
 
+
+	mount(elt: HTMLElement) {
+
+		this.#listeners.mount(elt);
+	}
+
 	/**
 	 *
 	 */
 	private async process(pmd: Pmd)
 	{
-		// calling requested tms...
-		const r = await this.#tms.process(pmd.tms);
 
 		// loading [default && global && currentPage] eventCallbacks
 		this.#listeners.loadRepository(pmd.listeners);
+
+		// calling requested tms...
+		this.#tms.process(pmd.tms);
 	}
 
 

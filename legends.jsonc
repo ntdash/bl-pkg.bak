@@ -23,7 +23,9 @@
 		"content": {
 			// "js:ac": "js-ac"
 
-			"pmd": "Page Modules"
+			"pmd": "Page Modules",
+
+			"js-ebind": "Eventlistener bind"
 		}
 	}
 ]

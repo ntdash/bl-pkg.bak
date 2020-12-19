@@ -12,15 +12,23 @@ interface ListenerRepositoryGroup {
 	preset: ListenerRepository
 
 	/**  Current-page Scopes */
-	pages: Ob<ListenerRepository>
+	current: ListenerRepository
 }
 
 
+
+interface mountEventStoreItem
+{
+	types: string[],
+	listenerName: string
+}
 
 
 // --------------------------------------------------------------------------------------
 
 interface ListenerLoader {
 
-	loadRepository: (collections: Pmd['listeners']) => Promise<void>
+	loadRepository: (collections: Pmd['listeners']) => void
+
+	mount: (elt: HTMLElement) => void
 }

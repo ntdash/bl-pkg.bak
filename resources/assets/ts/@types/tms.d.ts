@@ -25,7 +25,7 @@ interface TmsFallback {
 	  * TmsfallbackRetryOptions for retry_mode
 	  */
 	options: true | TmsFallbackRetryOptions
-	callback : Function
+	callback ?: Function
 }
 
 interface TmsFallbackRetryOptions {
@@ -60,7 +60,7 @@ interface Tms {
 	 *
 	 * The behavior and accessibility depend on the property [tms.priority]
 	 */
-	fallback ?: Function | TmsFallback
+	fallback ?:  TmsFallback | TmsFallbackRetryOptions | true | Function
 
 	callback: Function
 }
