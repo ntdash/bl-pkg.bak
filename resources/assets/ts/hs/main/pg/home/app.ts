@@ -9,9 +9,7 @@ const md: SinglePmd = {
 
 			fallback: {
 
-				options: {
-					delay: 2000
-				},
+				options: {delay: 5000},
 
 				callback: () => {
 					console.log("I'm the [fallback.callback]");
