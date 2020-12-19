@@ -6,16 +6,6 @@ interface TmsMutationOptions {
 	callback: Function
 }
 
-
-
-
-interface TmsFallbackOptions {
-
-	type: 'retry' | 'reported'
-	content: any
-}
-
-
 interface TmsFallback {
 
 	/**
@@ -30,26 +20,19 @@ interface TmsFallback {
 	 * }
 	 */
 
-	options : TmsFallbackReportedOptions | TmsFallbackRetryOptions
+	 /**
+	  * true for reported
+	  * TmsfallbackRetryOptions for retry_mode
+	  */
+	options: true | TmsFallbackRetryOptions
 	callback : Function
 }
 
+interface TmsFallbackRetryOptions {
 
-interface TmsFallbackReportedOptions extends TmsFallbackOptions {
-
-	type: 'reported'
-	content: boolean
+	n ?: 1|2|3,
+	delay: number
 }
-
-interface TmsFallbackRetryOptions extends TmsFallbackOptions {
-
-	type: 'retry'
-	content: {
-		n: 1|2|3,
-		delay: number
-	}
-}
-
 
 
 interface Tms {
@@ -72,6 +55,9 @@ interface Tms {
 
 	/**
 	 * Allow you to fire a fallback function when an error occured while running the called [tms.callback]
+	 *
+	 * [retry option] allowed a less than 3 times execution from the [tms.callback] -> [ +n | +delay]
+	 *
 	 * The behavior and accessibility depend on the property [tms.priority]
 	 */
 	fallback ?: Function | TmsFallback
@@ -84,7 +70,9 @@ interface TmsLog {
 	label: string
 	msg ?: string
 
-	others ?: Ob<any>
+	others ?: {
+		last_retry ?: boolean
+	}
 
 	/**
 	 * failed: -1
@@ -96,10 +84,19 @@ interface TmsLog {
 	 * reported: 2
 	 */
 	state: -1|0|1|2
+
+	/**
+	 * Performance times
+	 */
+	t: {
+		start: number
+		rtime: number
+		finish: number
+	}
 }
 
-interface TmsLogRepository extends Array<TmsLog> {}
-
+interface TmsLogRepository extends Array<TmsLog> {
+}
 
 // --------------------------------------------------------------------------------------
 

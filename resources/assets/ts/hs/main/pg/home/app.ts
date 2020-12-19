@@ -10,13 +10,9 @@ const md: SinglePmd = {
 			fallback: {
 
 				options: {
-
-					type: "retry",
-					content: {
-						n: 2,
-						delay: 2000
-					}
+					delay: 2000
 				},
+
 				callback: () => {
 					console.log("I'm the [fallback.callback]");
 				}
@@ -25,10 +21,8 @@ const md: SinglePmd = {
 			callback: () => {
 				console.log("starting");
 
-				if(typeof nt.map !== "string")
-				throw new Error("");
+				throw new Error("C'est de la merde");
 
-				console.log(nt.map);
 			}
 		}
 	]

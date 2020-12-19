@@ -15,6 +15,7 @@ class Loader implements TmsLoader {
 	constructor() {
 
 		this.#queue = DefaultRepository;
+
 		this.#logs = [];
 
 		// active tms & log initialization ...
@@ -22,17 +23,25 @@ class Loader implements TmsLoader {
 
 		this.#tms = {label: "", callback: new Function};
 
-
 		// save log globaly
-		(window as any)['logs'] = this.#logs;
+		(window as any)['logs'] = Object.assign(this.#logs, {
+
+			find: function (label: string) {
+
+				return Array.prototype.find.call(this, (e) => e.label === label);
+			}
+		});
 	}
 
 	private initLog(r:boolean = false) {
 
-		this.#log = { label: "", state: 0 };
+		const init = { label: "", state: 0, t: {start: performance.now(), rtime:0, finish: 0}} as TmsLog;
 
-		if(r === true)
-		return this.#log;
+		if(r)
+		return init;
+
+		else
+		this.#log = init;
 	}
 
 
@@ -55,7 +64,12 @@ class Loader implements TmsLoader {
 	}
 
 
-	private executeTms(tms: Tms) {
+	private executeTms(tms: Tms = this.#tms, skipReport: boolean = false) {
+
+		let log = this.#log;
+
+		// get tms priority
+		const pr = tms.priority;
 
 		try {
 			// execute [tms.callback]
@@ -66,32 +80,44 @@ class Loader implements TmsLoader {
 				nt.observers.push(tms.observe);
 
 			// change log state
-			this.#log.state = 1;
+			log.state = 1
 		}
 		catch($e) {
 
-			const pr = tms.priority;
+			Object.assign(log, {state: -1 , msg: {content: $e.message, stack: $e.stack}});
 
+			/**
+			 * tms.fallback
+			 * - allowed to to report or retry less than 3 times then [tms.callback] when he occured some error [+ delay]
+			 * - execute a callback [tms.fallback || tms.fallback.callback] after an occured error
+			 */
 			if(tms.fallback) {
 
-				let callback = this.resolveFallback();
+				let callback = this.resolveFallback(tms);
 
-				if(! callback || ! (callback instanceof Function))
-				throw `TmsError: Undefined [Fallback.callback] of Tms: ${tms.label}`;
 
-				callback();
+				if(callback) {
+
+					if(callback === -1)
+					log.state = 2;
+
+
+					else if(callback instanceof Function)
+					callback();
+
+					else
+					throw `TmsError: Undefined [Fallback.callback] of Tms: ${tms.label}`;
+				}
 			}
-
-			// crach process if priority is high
-			if(pr === 3)
-			throw $e;
 		}
 
-		console.log(this.#log);
 
+		if(! skipReport)
 		this.report();
-	}
 
+		if(log.msg && pr === 3 )
+		throw log.msg;
+	}
 
 
 	private executeCurrentQueue(log: boolean = false): Promise<void> {
@@ -101,32 +127,41 @@ class Loader implements TmsLoader {
 
 			for( let tms; tms = this.#queue.shift(); ) {
 
+				// init log
+				if(this.#log.label !== "")
+				this.initLog();
+
+
+				// [class scope for current tms]
 				this.#tms = tms;
 
-				// check if the current tms has already been excuted
-				if(fn.data.find(this.#logs, {label: this.#tms.label, state: 1}))
+
+				// check if the current tms has already been excuted without error
+				if(fn.data.find(this.#logs, {label: tms.label, state: 1}))
 				continue;
 
 
 				// hydrate tms.label
-				this.#log.label = this.#tms.label;
+				this.#log.label = tms.label;
 
 
 				// resolve dependencies related form [tms.depend_on] property
 				if(this.resolveDepencies())
 				continue;
 
-				// execute tms.callback
 
-				this.executeTms(this.#tms);
+				// execute tms.callback
+				this.executeTms();
+
 
 				// resolveAttached
-
 				this.resolveAttach();
 			}
 
+
 			if(log)
 			console.log(this.#logs);
+
 
 			rs();
 		}
@@ -140,17 +175,18 @@ class Loader implements TmsLoader {
 
 		const dependencies = this.#tms.depend_on;
 
+		let log = this.#log;
+
 		if(! (dependencies instanceof Array) ||  dependencies.length <= 0)
 		return false;
 
 		const search = [this.#tms];
 
-		for(let dp_name; dp_name = dependencies.shift(); )
-		{
+		for(let dp_name; dp_name = dependencies.shift(); ) {
+
 			const found = fn.data.find(this.#logs, {label: dp_name});
 
-			if(found)
-			{
+			if(found) {
 
 				if(found.state === 1)
 				continue;
@@ -158,8 +194,8 @@ class Loader implements TmsLoader {
 				throw new CriticalError({log: found.msg || `[${found.label}] as Tms dependencie had failed to run !`});
 
 			}
-			else
-			{
+			else {
+
 				const tms = fn.data.find(this.#queue, {label: dp_name});
 
 				if(! tms) {
@@ -172,8 +208,8 @@ class Loader implements TmsLoader {
 			}
 		}
 
-		if(search.length > 1)
-		{
+		if(search.length > 1) {
+
 			this.#log.state = 2;
 
 			this.report();
@@ -202,45 +238,81 @@ class Loader implements TmsLoader {
 
 
 
-	private resolveFallback() {
+	private resolveFallback(tms: Tms) {
 
-		const fall = this.#tms.fallback;
+		const fall = tms.fallback;
 
-		let callback: Function | undefined;
+		let callback: Function | -1 | undefined;
 
-		if(fall)
-		{
-			if(fall instanceof Function)
-				callback = fall;
+		if(fall) {
 
-			else {
+			console.log(fall);
 
-				if(fall.options.type === "reported" && fall.options.content)
 
-					this.#queue.push(this.#tms);
+			if(! (fall instanceof Function)) {
 
-				else
-					this.RetryTms(this.#tms);
+				if(typeof fall.options === "boolean" && fall.options === true)
+				this.#queue.push( Object.assign(tms, {fallback: fall.callback}));
 
-				return new Function;
+				else if(typeof fall.options === "object" && "delay" in fall.options)
+				this.RetryTms( Object.assign(tms, {fallback: undefined}), fall);
+
+				return -1;
 			}
+			else
+			callback = fall;
 		}
 
 		return callback;
 	}
 
 
-	private async RetryTms(tms: Tms) {
+	private async RetryTms(tms: Tms, fall: TmsFallback) {
 
-		const op = ((tms.fallback as TmsFallback).options as TmsFallbackRetryOptions).content;
+		const op = (fall.options as TmsFallbackRetryOptions);
 
-		if(op.n-- > 0)
-		{
-			setTimeout( () => {
-				this.#log.label = tms.label;
-				this.executeTms(tms);
-			}, op.delay);
+		let retry_limit = op.n || 1;
+
+		if( retry_limit < 0 || retry_limit > 3)
+		return;
+
+
+
+		const resolve = () => {
+
+			let resolved = false;
+
+			this.#log.label = tms.label;
+
+
+			this.executeTms(tms, true);
+
+
+
+			if(this.#log.state === 1)
+			resolved = true;
+
+
+			if(retry_limit > 0)
+			this.#log.state = 2;
+
+
+			this.report();
+
+
+			if(! resolved && --retry_limit >= 0)
+			setTimeout(resolve, op.delay);
+
+			else
+				if(fall.callback instanceof Function)
+				fall.callback();
+
 		}
+
+		resolve();
+
+
+
 
 	}
 
@@ -260,16 +332,17 @@ class Loader implements TmsLoader {
 		return this.executeCurrentQueue();
 	}
 
-
-
 	private report() {
+
+		const end = performance.now();
+
+		Object.assign(this.#log.t, {end, rtime: end - this.#log.t.start})
 
 		if(this.#log.label !== "")
 			this.#logs.push(this.#log);
 
 		this.initLog();
 	}
-
 
 
 }

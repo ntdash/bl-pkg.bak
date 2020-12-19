@@ -45,8 +45,6 @@ interface GlobalStore {
 
 	/** [Mutation Observers Cond] bind to the property, [observe], of each Tms requesting the monitoring of some HTMLElements */
 	observers: TmsMutationOptions[]
-
-	map ?: string
 }
 
 

@@ -12,7 +12,7 @@ interface ListenerRepositoryGroup {
 	preset: ListenerRepository
 
 	/**  Current-page Scopes */
-	current: ListenerRepository
+	pages: Ob<ListenerRepository>
 }
 
 
