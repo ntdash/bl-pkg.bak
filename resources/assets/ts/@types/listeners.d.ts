@@ -30,5 +30,7 @@ interface ListenerLoader {
 
 	loadRepository: (collections: Pmd['listeners']) => void
 
+	process: (stack: Pmd['listeners']) => void
+
 	mount: (elt: HTMLElement) => void
 }

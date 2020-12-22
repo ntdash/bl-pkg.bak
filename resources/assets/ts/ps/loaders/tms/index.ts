@@ -64,15 +64,24 @@ class Loader implements TmsLoader {
 
 
 		try {
-			// execute [tms.callback]
-			tms.callback();
 
-			// observer if needed
-			if(tms.observe)
+			if("callback" in tms || "observe" in tms) {
+
+				// execute [tms.callback]
+				if(tms.callback)
+				tms.callback();
+
+				// observer if needed
+				if(tms.observe)
 				nt.observers.push(tms.observe);
 
-			// change log state
-			log.state = 1
+				// change log state
+				log.state = 1;
+			}
+			else
+			throw `Missing the following properties ['observer', 'callback'] on Tms: "${ (tms as Tms).label }"`;
+
+
 		}
 		catch($e) {
 

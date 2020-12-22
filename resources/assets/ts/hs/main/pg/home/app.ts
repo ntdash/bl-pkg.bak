@@ -23,7 +23,13 @@ const md: SinglePmd = {
 
 			}
 		}
-	]
+	],
+	listeners: {
+		testButton: (e: Event) => {
+
+			nt.app.loadPart("pg.contact");
+		}
+	}
 }
 
 

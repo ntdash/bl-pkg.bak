@@ -57,7 +57,7 @@ class Application implements Starter {
 	/**
 	 *
 	 * @param filename dotted-filename [e.g: svc.dashboad -> svc/da1shboard]
-	 * @param depth search recurvity [state at 1] [HostScopes && PagesScopes]
+	 * @param depth allowed resursive search [state at 1] [HostScopes && PagesScopes]
 	 * 1 -> pages scopes
 	 * 0 -> hosts (preset) scopes
 	 */
@@ -85,7 +85,7 @@ class Application implements Starter {
 			if(depth > 0)
 				return this.loadPart(filename, undefined, --depth);
 
-			throw $e;
+				throw new CriticalError({log: $e});
 		 });
 
 	}
@@ -100,7 +100,7 @@ class Application implements Starter {
 
 		resolve += `${params.container + (depth === 1 ? "/" + params.pagename : "") }/${filename}`;
 
-		return `${resolve}.app`;
+		return `${resolve}/app`;
 	}
 
 	/**
@@ -134,11 +134,10 @@ class Application implements Starter {
 			}
 		}
 
-
 		return resolve;
 	}
 
-
+	// mounting_listerners mount-method
 	mount(elt: HTMLElement) {
 
 		this.#listeners.mount(elt);
@@ -151,7 +150,7 @@ class Application implements Starter {
 	{
 
 		// loading [default && global && currentPage] eventCallbacks
-		this.#listeners.loadRepository(pmd.listeners);
+		this.#listeners.process(pmd.listeners);
 
 		// calling requested tms...
 		this.#tms.process(pmd.tms);

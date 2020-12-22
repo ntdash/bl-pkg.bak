@@ -4,7 +4,7 @@ import DefaultRepository from "./default"
 class Loader implements ListenerLoader {
 
 	#repository: ListenerRepositoryGroup;
-	#pattern = /^\[([A-Za-z:,]+)\]:([A-Za-z0-9]{5,})$/;
+	#pattern = /^\[([A-Za-z:,]+)\]:([A-Za-z0-9]{3,})$/;
 
 
 	constructor() {
@@ -14,7 +14,7 @@ class Loader implements ListenerLoader {
 
 	mount (elt: Element) {
 
-		const params = this.retriveParams(elt.getAttribute('js-ebind') || "");
+		const params = this.retriveParams(elt.getAttribute(vr.listeners.mounting_attr_query) || "");
 
 		if(params) {
 
@@ -46,7 +46,7 @@ class Loader implements ListenerLoader {
 
 			if(fetch && fetch.length === 3)
 			{
-				const sliced = fetch.slice(1)
+				const sliced = fetch.slice(1);
 
 				result.push({
 					types: sliced[0].split(','),
@@ -58,6 +58,14 @@ class Loader implements ListenerLoader {
 		return result.length > 0 ? result : false;
 	}
 
+	process(stack: Pmd['listeners']) {
+
+		this.loadRepository(stack);
+
+		document.querySelectorAll(vr.listeners.mounting_query)
+		.forEach(elt => { this.mount(elt) })
+	}
+
 
 	resolveListener(name:string) {
 
@@ -67,7 +75,6 @@ class Loader implements ListenerLoader {
 
 			if(name in stack)
 			return stack[name];
-
 		}
 
 		return false;
@@ -79,7 +86,6 @@ class Loader implements ListenerLoader {
 
 		if(! repository)
 		return;
-
 
 		for(let k in repository) {
 

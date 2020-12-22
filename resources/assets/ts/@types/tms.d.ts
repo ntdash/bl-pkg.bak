@@ -62,7 +62,7 @@ interface Tms {
 	 */
 	fallback ?:  TmsFallback | TmsFallbackRetryOptions | true | Function
 
-	callback: Function
+	callback ?: Function
 }
 
 interface TmsLog {

@@ -1,6 +1,7 @@
 interface Starter {
 
 	mount: (elt: HTMLElement) => void
+	loadPart: (filename: string) => void
 	start: () => void
 }
 

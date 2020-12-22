@@ -28,11 +28,16 @@ class PmdUtils {
 
 				const stack = pmd.listeners;
 
-				if(stack.preset)
-				Object.assign(refactored.listeners, {preset: stack.preset});
+				if('preset' in stack) {
 
-				if(stack.current)
-				Object.assign(refactored.listeners, {current: stack.current || {}});
+					if(stack.preset)
+					Object.assign(refactored.listeners, {preset: stack.preset});
+
+					if(stack.current)
+					Object.assign(refactored.listeners, {current: stack.current || {}});
+				}
+				else
+				Object.assign(refactored.listeners, {current: stack || {}});
 			}
 		}
 		else {
