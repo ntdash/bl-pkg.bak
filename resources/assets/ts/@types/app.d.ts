@@ -37,6 +37,12 @@ interface HsConfig {
 // ------------------------------------------------------------
 
 
+interface PmdHtmlOptions {
+	type: 'link' | 'content'
+	content: string
+}
+
+
 interface SinglePmd {
 
 	listeners ?: {
@@ -45,6 +51,13 @@ interface SinglePmd {
 	} | ListenerRepository
 
 	tms ?: Tms[]
+
+	/**
+	 * string format
+	 * link => "->|(externe_link: https://localhost | same_protocolo: //localhost | interne_link: /contact)"
+	 * content => "=>|innerHTML"
+	 */
+	html ?: PmdHtmlOptions | 'string'
 }
 
 interface MultiPmd {
