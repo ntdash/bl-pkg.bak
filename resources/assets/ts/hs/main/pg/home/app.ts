@@ -1,3 +1,5 @@
+import partielLoader from "scripts/ps/starter/utils/partiel-loader";
+
 
 const md: SinglePmd = {
 
@@ -26,11 +28,9 @@ const md: SinglePmd = {
 	],
 	listeners: {
 		testButton: (e: Event) => {
-
-			nt.app.loadPart("pg.contact");
+			partielLoader.load("pg.contact");
 		}
 	}
 }
-
 
 export default md;

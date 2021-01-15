@@ -1,8 +1,17 @@
-import { statSync } from "fs";
+class ApplicationWrapper {
 
-class PmdUtils {
+	constructor ()  {
 
-	refactor(pmd: SinglePmd | MultiPmd ) : Pmd {
+		/**
+		 * Global Variable Initialization
+		 */
+		Object.assign(nt, {
+			app: this,
+			cai: {}
+		});
+	}
+
+	protected refactor(pmd: SinglePmd | MultiPmd ) : Pmd {
 
 		// Empty Repository
 		const refactored: Pmd = {tms: {}, listeners: {}};
@@ -83,4 +92,4 @@ class PmdUtils {
 
 }
 
-export default new PmdUtils;
+export default ApplicationWrapper;
