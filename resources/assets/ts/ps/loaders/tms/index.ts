@@ -40,7 +40,6 @@ class Loader implements TmsLoader {
 		};
 	}
 
-
 	private loadRepository(repository: Pmd['tms'])
 	{
 		const repo:Tms[] = [];
@@ -58,7 +57,6 @@ class Loader implements TmsLoader {
 
 		return repo;
 	}
-
 
 	private executeTms(tms: Tms, skipReport: boolean = false, log: TmsLog = this.initLog()) {
 
@@ -127,7 +125,6 @@ class Loader implements TmsLoader {
 
 	}
 
-
 	private executeCurrentQueue(log: boolean = false): Promise<void> {
 
 
@@ -169,8 +166,6 @@ class Loader implements TmsLoader {
 
 		return new Promise(resolve.bind(this));
 	}
-
-
 
 	private resolveDepencies(tms: Tms, log: TmsLog) : boolean | undefined {
 
@@ -225,7 +220,6 @@ class Loader implements TmsLoader {
 		}
 	}
 
-
 	private resolveAttach(tms: Tms) {
 
 		if(! tms.attach || ! (tms.attach instanceof Array))
@@ -240,8 +234,6 @@ class Loader implements TmsLoader {
 			this.#queue.unshift(tms);
 		}
 	}
-
-
 
 	private resolveFallback(tms: Tms) {
 
@@ -286,7 +278,6 @@ class Loader implements TmsLoader {
 
 		return callback;
 	}
-
 
 	private async RetryTms(tms: Tms, fall: TmsFallback) {
 
@@ -367,7 +358,6 @@ class Loader implements TmsLoader {
 			this.#logs.push(log);
 
 	}
-
 
 }
 

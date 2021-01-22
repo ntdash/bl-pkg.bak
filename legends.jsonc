@@ -19,13 +19,22 @@
 		}
 	},
 	{
-		"name": "attribut fortage name",
+		"name": "attribut shortage name",
 		"content": {
 			// "js:ac": "js-ac"
 
 			"pmd": "Page Modules",
 
-			"js-ebind": "Eventlistener bind"
+			"js-ebind": "Eventlistener bind",
+
+			"wp": "wrapper"
+		}
+	},
+
+	{
+		"name": "attribut value",
+		"content": {
+			"dync": "dynamique"
 		}
 	}
 ]

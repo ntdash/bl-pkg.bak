@@ -1,4 +1,4 @@
-import partielLoader from "scripts/ps/starter/utils/partiel-loader";
+import partielLoader from "scripts/ps/starter/utils/partial-loader";
 
 
 const md: SinglePmd = {

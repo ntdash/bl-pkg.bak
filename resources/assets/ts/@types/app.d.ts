@@ -1,6 +1,5 @@
 interface Starter {
 
-	// mount: (elt: HTMLElement) => void
 	start: () => void
 }
 
@@ -37,8 +36,18 @@ interface HsConfig {
 
 
 interface PmdHtmlOptions {
-	type: 'link' | 'content'
+
+	type ?: 'link' | 'html'
+	wp: string
 	content: string
+}
+
+/**
+ *
+ * PmdHtmlOptionsRsolved
+ */
+interface PHOR extends PmdHtmlOptions{
+	type: 'link' | 'html'
 }
 
 
@@ -56,7 +65,7 @@ interface SinglePmd {
 	 * link => "->|(externe_link: https://localhost | same_protocolo: //localhost | interne_link: /contact)"
 	 * content => "=>|innerHTML"
 	 */
-	html ?: PmdHtmlOptions | 'string'
+	html ?: PmdHtmlOptions | PmdHtmlOptions[]
 }
 
 interface MultiPmd {
@@ -76,4 +85,6 @@ interface Pmd {
 
 	listeners: PmdRepositoryItem<ListenerRepository>
 	tms: PmdRepositoryItem<Tms[]>
+
+	html ?: SinglePmd['html']
 }

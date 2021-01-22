@@ -48,6 +48,9 @@ class ApplicationWrapper {
 				else
 				Object.assign(refactored.listeners, {current: stack || {}});
 			}
+
+			if(pmd.html)
+			Object.assign(refactored, {html: pmd.html})
 		}
 		else {
 

@@ -1,23 +1,22 @@
-import PmdFn from "./pmd-fn";
+import { process } from "./pmd-fn";
 
 import CriticalError from "scripts/ps/error/critical"
-import ApplicationWrapper from "./wrapper";
 
+import ApplicationWrapper from "./wrapper";
 
 // Partiel Loader
 
-class PartielLoader extends ApplicationWrapper
+class PartialLoader extends ApplicationWrapper
 {
 
 	load(filename: string, options ?: StaterLoadPartOptions, depth: number = 1) {
-
 
 		import(`hs/${ this.resolvePartielSection(filename, depth)}.part.ts`)
 		.then(async ({default: pmd}) => {
 
 			pmd = this.refactor(pmd);
 
-			const log = PmdFn.process(pmd, true);
+			const log = process(pmd, true);
 
 			if(log && options)
 			log
@@ -33,7 +32,6 @@ class PartielLoader extends ApplicationWrapper
 
 			throw new CriticalError({log: $e});
 		 });
-
 	}
 
 	private resolvePartielSection(filename: string, depth: number) : string {
@@ -51,4 +49,10 @@ class PartielLoader extends ApplicationWrapper
 }
 
 
-export default new PartielLoader;
+const Instance = new PartialLoader;
+
+const loadPartial = Instance.load;
+
+
+export { loadPartial }
+export default Instance;
