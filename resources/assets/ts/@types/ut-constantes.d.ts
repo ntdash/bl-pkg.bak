@@ -2,7 +2,7 @@ interface UtilsConstants {
 
 	listeners: {
 
+		mounting_attr: string
 		mounting_query: string
-		mounting_attr_query: string
 	}
 }

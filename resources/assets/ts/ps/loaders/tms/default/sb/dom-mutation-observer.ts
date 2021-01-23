@@ -1,40 +1,38 @@
 function callback () {
 
-	const [ config, callback ] : [MutationObserverInit, MutationCallback] =
-		[
-			{ childList: true, subtree: true },
+	const MutationConfig: MutationObserverInit = {childList: true, subtree: true};
 
-			function(mutations) {
+	function MutationCallback (mutations: MutationRecord[]) {
 
-				const cbList = nt.observers;
+		const cbList = nt.observers;
 
-				if(!(cbList instanceof Array) || cbList.length < 0)
-				return false;
+		if(!(cbList instanceof Array) || cbList.length < 0)
+		return false;
 
+		for(let record of mutations)
+		for(let elt of record.addedNodes)
+		for(let cb of cbList) {
 
-				mutations.forEach( record =>
-				{
+			let found: Node | false = false;
 
-					record.addedNodes
-					.forEach( elt =>
-					{
-
-						cbList.forEach( cb =>
-						{
-							if( cb.cond(elt) )
-								try { cb.callback(elt) } catch ($e) { console.error($e) }
-
-						});
-					});
-
-				})
+			if(cb.cond(elt))
+				found = elt;
+			else {
+				if(elt instanceof HTMLElement)
+					elt.querySelectorAll('*')
+					.forEach(s => { if(cb.cond(s)) found = s; })
 			}
 
-		];
+			if(found) {
+				try {cb.callback(found)}
+				catch($e) { console.log($e) }
+			}
+		}
+	}
 
-		const Ob = new MutationObserver(callback);
+	const Ob = new MutationObserver(MutationCallback);
 
-		Ob.observe(document.body, config);
+	Ob.observe(document.body, MutationConfig);
 }
 
 

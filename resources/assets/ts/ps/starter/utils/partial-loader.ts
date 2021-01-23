@@ -1,4 +1,4 @@
-import { process } from "./pmd-fn";
+import { PartialProcess as process } from "./pmd-fn";
 
 import CriticalError from "scripts/ps/error/critical"
 
@@ -9,9 +9,13 @@ import ApplicationWrapper from "./wrapper";
 class PartialLoader extends ApplicationWrapper
 {
 
-	load(filename: string, options ?: StaterLoadPartOptions, depth: number = 1) {
+	async load(filename: string, options ?: StaterLoadPartOptions, depth: number = 1) {
 
-		import(`hs/${ this.resolvePartielSection(filename, depth)}.part.ts`)
+		const section = this.resolvePartielSection(filename, depth);
+
+		const response = import(`hs/${ section }.part.ts`);
+
+		response
 		.then(async ({default: pmd}) => {
 
 			pmd = this.refactor(pmd);
@@ -34,15 +38,13 @@ class PartialLoader extends ApplicationWrapper
 		 });
 	}
 
-	private resolvePartielSection(filename: string, depth: number) : string {
+	private resolvePartielSection(path: string, depth: number) : string {
 
 		const params = nt.data.params;
 
-		filename = filename.replace('.', '/');
+		const filename = path.replace('.', '/');
 
-		let resolve = "";
-
-		resolve += `${params.container + (depth === 1 ? "/" + params.pagename : "") }/${filename}`;
+		const resolve = `${params.container + (depth === 1 ? "/" + params.pagename : "") }/${filename}`;
 
 		return `${resolve}/app`;
 	}

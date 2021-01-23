@@ -39,6 +39,20 @@ class Loader implements HTMLLoader {
 		throw `Emtpy Dynamic content or Unexpected type !== "string"`;
 
 		wp.innerHTML = content;
+
+
+		// const div = document.createElement('div');
+
+		// // fill wrapper
+		// div.innerHTML = content;
+
+		// // append content
+
+		// const children = [...div.children];
+
+		// for(let elt of children)
+		// wp.appendChild(elt);
+
 	}
 
 

@@ -1,110 +1,119 @@
-import DefaultRepository from "./default"
-
+import DefaultRepository from "./default";
 
 class Loader implements ListenerLoader {
 
 	#repository: ListenerRepositoryGroup;
 	#pattern = /^\[([A-Za-z:,]+)\]:([A-Za-z0-9]{3,})$/;
 
-
 	constructor() {
-		this.#repository = { global: DefaultRepository, preset: {}, current: {}};
+
+		this.#repository = {
+			global: DefaultRepository,
+			preset: {},
+			current: {},
+		};
+
+		(window as any)["listeners"] = this.#repository;
 	}
 
+	mount(elt: Element) {
 
-	mount (elt: Element) {
+		const params = this.retriveParams(
+			elt.getAttribute(vr.listeners.mounting_attr) || ""
+		);
 
-		const params = this.retriveParams(elt.getAttribute(vr.listeners.mounting_attr_query) || "");
+		if (params) {
 
-		if(params) {
-
-			for(let param ; param = params.shift(); ) {
+			for (let param of params) {
 
 				const listener = this.resolveListener(param.listenerName);
 
-				if(listener)
-				for(let type; type = param.types.shift();)
-				elt.addEventListener(type, listener);
+				if (listener) {
+					for (let type of param.types) {
+						elt.addEventListener(type, listener);
+					}
+				}
 			}
 		}
-
 	}
 
+	retriveParams(attr: string) {
 
-	retriveParams (attr: string)
-	{
-
-		if(attr === "")
-		return false;
+		if (attr === "") return false;
 
 		const result: mountEventStoreItem[] = [];
 
-		attr.replace(' ', '').split('|')
-		.forEach(param =>
-		{
-			const fetch = param.match(this.#pattern);
+		attr.replace(" ", "")
+			.split("|")
+			.forEach((param) => {
+				const fetch = param.match(this.#pattern);
 
-			if(fetch && fetch.length === 3)
-			{
-				const sliced = fetch.slice(1);
+				if (fetch && fetch.length === 3) {
 
-				result.push({
-					types: sliced[0].split(','),
-					listenerName: sliced[1]
-				});
-			}
-		});
+					const sliced = fetch.slice(1);
+
+					result.push({
+						types: sliced[0].split(","),
+						listenerName: sliced[1],
+					});
+				}
+			});
 
 		return result.length > 0 ? result : false;
 	}
 
-	process(stack: Pmd['listeners']) {
+	process(stack: Pmd["listeners"]) {
 
 		this.loadRepository(stack);
 
-		document.querySelectorAll(vr.listeners.mounting_query)
-		.forEach(elt => { this.mount(elt) })
+		document
+		.querySelectorAll(vr.listeners.mounting_query)
+		.forEach((elt) => {
+			this.mount(elt);
+		});
 	}
 
+	resolveListener(name: string) {
 
-	resolveListener(name:string) {
-
-		for(let k in this.#repository) {
+		for (let k in this.#repository) {
 
 			const stack = this.#repository[k as keyof ListenerRepositoryGroup];
 
-			if(name in stack)
-			return stack[name];
+			if (name in stack) return stack[name];
 		}
 
 		return false;
 	}
 
+	loadRepository(repository: Pmd["listeners"]) {
 
+		if (!repository) return;
 
-	loadRepository(repository: Pmd['listeners']) {
+		for (let k in repository) {
 
-		if(! repository)
-		return;
+			let resolved: {
+				k: "current" | "preset"
+				l: ListenerRepository
+			} = Object.assign({});
 
-		for(let k in repository) {
+			switch (k) {
 
-			let resolved: {k: 'current' | 'preset', l: ListenerRepository} = Object.assign({});
-
-			switch(k) {
-
-				case 'current':
-				case 'preset':
-
-					resolved = {k, l: repository[k] as ListenerRepository}
+				case "current":
+				case "preset":
+					resolved = { k, l: repository[k] as ListenerRepository };
 				break;
-				case 'pages':
 
-					resolved = {k: 'current', l: (repository.pages as Ob<ListenerRepository>)[nt.data.params.pagename]};
+				case "pages":
+					resolved = {
+						k: "current",
+						l: (repository.pages as Ob<ListenerRepository>)[
+							nt.data.params.pagename
+						],
+					};
 				break;
 			}
 
-			Object.assign(this.#repository, { [ resolved.k ]: resolved.l});
+			Object.assign(this.#repository, { [resolved.k]: resolved.l });
 		}
 	}
 }

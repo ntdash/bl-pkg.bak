@@ -1,4 +1,4 @@
-import partielLoader from "scripts/ps/starter/utils/partial-loader";
+import PartialLoader from "scripts/ps/starter/utils/partial-loader";
 
 
 const md: SinglePmd = {
@@ -28,7 +28,7 @@ const md: SinglePmd = {
 	],
 	listeners: {
 		testButton: (e: Event) => {
-			partielLoader.load("pg.contact");
+			PartialLoader.load("pg.contact");
 		}
 	}
 }
