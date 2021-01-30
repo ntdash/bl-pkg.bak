@@ -31,7 +31,12 @@ class Loader implements HTMLLoader {
 		const wp = this.getContentWrapper(data);
 
 		if(!wp)
-		throw `Dynamic content's wrapper is missing`;
+		// throw `Missing dynamic content's wrapper`;
+		// throw data;
+		{
+			console.log(data, wp);
+			throw "";
+		}
 
 		const content = await this.getContent(data);
 
@@ -39,19 +44,6 @@ class Loader implements HTMLLoader {
 		throw `Emtpy Dynamic content or Unexpected type !== "string"`;
 
 		wp.innerHTML = content;
-
-
-		// const div = document.createElement('div');
-
-		// // fill wrapper
-		// div.innerHTML = content;
-
-		// // append content
-
-		// const children = [...div.children];
-
-		// for(let elt of children)
-		// wp.appendChild(elt);
 
 	}
 

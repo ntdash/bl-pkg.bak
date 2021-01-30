@@ -9,12 +9,7 @@ const tms: Tms = {
 			elt instanceof HTMLElement &&
 			elt.hasAttribute(vr.listeners.mounting_attr),
 
-		callback: (elt: HTMLElement) => {
-
-			console.log(elt);
-
-			mount(elt);
-		},
+		callback: (elt: HTMLElement) => mount(elt),
 	},
 };
 

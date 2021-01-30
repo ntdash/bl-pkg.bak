@@ -26,7 +26,7 @@ class PmdFn {
 		 *  ld_mth as listener dynamical method
 		 */
 
-		const ld_mth = !partial ? "process" : "loadRepository";
+		const ld_mth = partial ? "loadRepository" : "process";
 		this.#listeners[ld_mth](pmd.listeners);
 
 		// load Partial HTML

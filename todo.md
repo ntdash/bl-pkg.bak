@@ -1,15 +1,19 @@
 #partial-loader
-	- report every load in a logs property
+	+ report every load in a logs property
 
-> pending
+	---
+	| to avoid multi launch
+	| allow a reload
+
+> done
 
 
 #erros
 
-	- error refactor
-		- desc
+	+ error refactor
+		+ desc
 			> create an index file
 			> refactor all error type
 			> no default export
 
-> pending
+> done

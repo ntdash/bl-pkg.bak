@@ -1,5 +1,5 @@
 import DefaultRepository from "./default"
-import CriticalError from "../../error/critical"
+import {critical as CriticalError} from "scripts/ps/error"
 
 
 class Loader implements TmsLoader {

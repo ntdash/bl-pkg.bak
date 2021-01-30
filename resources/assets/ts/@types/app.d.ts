@@ -4,7 +4,7 @@ interface Starter {
 }
 
 
-interface StaterLoadPartOptions
+interface PartialLoaderCallbacks
 {
 	done ?: VoidFunction
 	fail ?: VoidFunction
@@ -44,7 +44,7 @@ interface PmdHtmlOptions {
 
 /**
  *
- * PmdHtmlOptionsRsolved
+ * PmdHtmlResolvedOptions
  */
 interface PHOR extends PmdHtmlOptions{
 	type: 'link' | 'html'

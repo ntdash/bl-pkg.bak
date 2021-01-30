@@ -1,3 +1,5 @@
+import {reload} from "scripts/ps/starter/utils/partial-loader"
+
 const pmd: SinglePmd = {
 	tms: [
 		{
@@ -8,9 +10,7 @@ const pmd: SinglePmd = {
 		},
 	],
 	listeners: {
-		testBtn: (e: Event) => {
-			console.log("welcome");
-		}
+		testBtn: (e: Event) => {}
 	},
 	html: {
 		wp: "contact-wp",
