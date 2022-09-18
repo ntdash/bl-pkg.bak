@@ -22,23 +22,18 @@ class Loader implements HTMLLoader {
 		const repo:PmdHtmlOptions[] = [...(data instanceof Array ? data : [data])];
 
 		repo
-		.forEach(item => this.load( this.resolveOptions(item)));
+		.forEach(item => this.#load( this.#resolveOptions(item)));
 	}
 
-	private async load(data: PHOR)
+	async #load(data: PHOR)
 	{
 
-		const wp = this.getContentWrapper(data);
+		const wp = this.#getContentWrapper(data);
 
 		if(!wp)
-		// throw `Missing dynamic content's wrapper`;
-		// throw data;
-		{
-			console.log(data, wp);
-			throw "";
-		}
+		throw `Missing dynamic content's wrapper`;
 
-		const content = await this.getContent(data);
+		const content = await this.#getContent(data);
 
 		if(! content)
 		throw `Emtpy Dynamic content or Unexpected type !== "string"`;
@@ -48,7 +43,7 @@ class Loader implements HTMLLoader {
 	}
 
 
-	private resolveOptions(data: PmdHtmlOptions) {
+	#resolveOptions(data: PmdHtmlOptions) {
 
 		const op: PHOR = {
 			type: 'link',
@@ -79,7 +74,7 @@ class Loader implements HTMLLoader {
 	}
 
 
-	private getContentWrapper(op: PHOR) {
+	#getContentWrapper(op: PHOR) {
 
 		const wp = document.getElementById(op.wp);;
 
@@ -89,7 +84,7 @@ class Loader implements HTMLLoader {
 	}
 
 
-	private async getContent(op: PHOR) {
+	async #getContent(op: PHOR) {
 
 		if(typeof op.content !== "string" || op.content.length <= 0)
 		return false;

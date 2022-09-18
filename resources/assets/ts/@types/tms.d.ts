@@ -44,6 +44,7 @@ interface Tms {
 	 * Medium (2): allowed fallback.options + [normal inclued]
 	 *
 	 * High (3): Crash process on Error + [medium inclued]
+	 * 
 	 */
 	priority ?: 1|2|3,
 
@@ -70,6 +71,7 @@ interface TmsLog {
 	label: string
 	msg ?: string
 
+	// more instead of others
 	others ?: {
 		last_retry ?: boolean
 	}
@@ -90,13 +92,12 @@ interface TmsLog {
 	 */
 	t: {
 		start: number
-		rtime: number
-		finish: number
+		runtime: number
+		end: number
 	}
 }
 
-interface TmsLogRepository extends Array<TmsLog> {
-}
+interface TmsLogRepository extends Array<TmsLog> {}
 
 // --------------------------------------------------------------------------------------
 

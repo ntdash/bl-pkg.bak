@@ -18,7 +18,7 @@ class Loader implements ListenerLoader {
 
 	mount(elt: Element) {
 
-		const params = this.retriveParams(
+		const params = this.retrieveParams(
 			elt.getAttribute(vr.listeners.mounting_attr) || ""
 		);
 
